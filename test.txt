@@ -1,3 +1,2 @@
 안녕하세요! 변경 UI 테스트입니다!
-두번째 Git-HubFlow Test입니다!
-세번째 GitLabFlow Test 입니다!
+첫번쨰 Single Branch 테스트
