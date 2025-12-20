@@ -17,10 +17,10 @@ function safeNumber(v, operationName) {
  * @param {number} b 두 번째 숫자
  * @returns {number} 합계
  */
-export function add(a, b) {
+export function add(a, c) {
     safeNumber(a, 'add');
-    safeNumber(b, 'add');
-    return a + b;
+    safeNumber(c, 'add');
+    return a + c;
 }
 
 /**
