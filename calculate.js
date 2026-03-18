@@ -49,6 +49,7 @@ export function multiply(a, b) {
 
 /**
  * 두 숫자를 나눕니다. (a / b)
+ * 
  * b가 0일 경우 Infinity를 반환합니다.
  * @param {number} a 분자
  * @param {number} b 분모
