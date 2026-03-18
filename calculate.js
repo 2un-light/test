@@ -1,67 +1,69 @@
 /**
  * math.js
- * 기본적인 사칙연산 함수를 제공하는 모듈입니다.
+ * Provides basic arithmetic functions.
  */
 
-// 입력값이 유효한 숫자인지 확인하고, 아니면 TypeError를 발생시키는 헬퍼 함수
-function safeNumber(v, operationName) {
-    if (typeof v !== "number" || Number.isNaN(v)) {
-        throw new TypeError(`[${operationName}] Invalid number: ${v}. Input must be a valid number.`);
+/**
+ * Validate that all arguments are valid numbers
+ * @param {string} operationName
+ * @param {...number} values
+ */
+function validateNumbers(operationName, ...values) {
+    values.forEach((value) => {
+        if (typeof value !== "number" || Number.isNaN(value)) {
+            throw new TypeError(
+                `[${operationName}] Invalid number: ${value}. Must be a valid number.`
+            );
+        }
+    });
+}
+
+/**
+ * Execute arithmetic operation safely
+ * @param {string} operationName
+ * @param {(a:number, b:number)=>number} operationFn
+ * @param {number} a
+ * @param {number} b
+ * @returns {number}
+ */
+function execute(operationName, operationFn, a, b) {
+    validateNumbers(operationName, a, b);
+
+    try {
+        return operationFn(a, b);
+    } catch (error) {
+        console.error(`[${operationName}] Error:`, error);
+        throw error;
     }
-    return v;
 }
 
 /**
- * 두 숫자를 더합니다.
- * @param {number} a 첫 번째 숫자
- * @param {number} b 두 번째 숫자
- * @returns {number} 합계
+ * Arithmetic operation definitions
  */
-export function add(a, b) {
-    safeNumber(a, 'add');
-    safeNumber(b, 'add');
-    return a + b;
-}
+const operations = Object.freeze({
+    add: (a, b) => a + b,
+    subtract: (a, b) => a - b,
+    multiply: (a, b) => a * b,
+    divide: (a, b) => {
+        if (b === 0) {
+            console.warn("⚠️ divide by zero detected. Returning Infinity.");
+            return Infinity;
+        }
+        return a / b;
+    },
+});
 
 /**
- * 두 숫자를 뺍니다. (a - b)
- * @param {number} a 첫 번째 숫자
- * @param {number} b 두 번째 숫자
- * @returns {number} 차이
+ * Public API
  */
-export function subtract(a, b) {
-    safeNumber(a, 'subtract');
-    safeNumber(b, 'subtract');
-    return a - b;
-}
+export const add = (a, b) =>
+    execute("add", operations.add, a, b);
 
-/**
- * 두 숫자를 곱합니다.
- * @param {number} a 첫 번째 숫자
- * @param {number} b 두 번째 숫자
- * @returns {number} 곱
- */
-export function multiply(a, b) {
-    safeNumber(a, 'multiply');
-    safeNumber(b, 'multiply');
-    return a * b;
-}
+export const subtract = (a, b) =>
+    execute("subtract", operations.subtract, a, b);
 
-/**
- * 두 숫자를 나눕니다. (a / b)
- * b가 0일 경우 Infinity를 반환합니다.
- * @param {number} a 분자
- * @param {number} b 분모
- * @returns {number} 몫
- */
-export function divide(a, b) {
-    safeNumber(a, 'divide');
-    safeNumber(b, 'divide');
-    
-    if (b === 0) {
-        console.warn("⚠️ divide by zero detected. Returning Infinity.");
-        return Infinity;
-    }
-    
-    return a / b;
-}
+export const multiply = (a, b) =>
+    execute("multiply", operations.multiply, a, b);
+
+export const divide = (a, b) =>
+    execute("divide", operations.divide, a, b);
